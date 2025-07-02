@@ -516,4 +516,8 @@ Header Style
     align-items: center;
     height: 120vh;
   }
+
+  .container-left {
+  margin-left: 75vw;
+}
 }
