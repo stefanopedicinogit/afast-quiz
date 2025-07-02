@@ -62,9 +62,9 @@ ul {
 }
 
 h2 {
-  font-size: 1.25em;
+  font-size: 1.6rem !important;
   font-weight: bold;
-  padding: 50px;
+  padding: 40px;
   background-color: #fff;
   border-radius: 10px;
   margin-bottom: 20px;
