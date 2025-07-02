@@ -471,3 +471,10 @@ Header Style
   }
   
 }
+
+
+@media (max-width: 1500px) {
+  body {
+    zoom: 0.5;
+  }
+}
