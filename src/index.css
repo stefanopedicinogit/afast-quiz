@@ -514,10 +514,10 @@ Header Style
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120vh;
+    height: 100vh;
   }
 
   .container-left {
-  margin-left: 75vw;
+  margin-left: 40vw;
 }
 }
