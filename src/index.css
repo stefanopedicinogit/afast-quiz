@@ -39,11 +39,15 @@ button {
 
 button.correct {
   border: 5px solid #008000;
+  background-color: #93c9a6;
+
+
   /* green color */
 }
 
 button.incorrect {
   border: 5px solid #ff0000;
+  background-color: #c98e8e;
   /* red color */
 }
 
