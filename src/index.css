@@ -3,12 +3,16 @@ code {
     monospace;
 }
 
+body {
+  overflow: hidden;
+}
+
 .main-banner {
   background-image: url('../public/banner-bg-accenture.jpg');
   background-position: right bottom;
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 150px 0px 100px 0px;
+  padding: 265px 0px 100px 0px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -18,9 +22,10 @@ code {
 
 .container {
   display: flex;
-  justify-content: center;
+  margin-top: -5%;
+  justify-content: top;
   align-items: center;
-  height: 60vh;
+  min-height: 102vh;
 }
 
 .container-left {
@@ -72,6 +77,13 @@ h2 {
   background-color: #fff;
   border-radius: 10px;
   margin-bottom: 20px;
+  min-width: 100% !important;
+  text-align: center;
+}
+
+h2.supporto{
+  min-width: 70% !important;
+  max-width: 70% !important;
 }
 
 p.score {
@@ -81,21 +93,50 @@ p.score {
   /* green color */
   padding: 10px;
   border-radius: 10px;
-  background-color: rgba(247, 247, 247, 0.7); /* light gray background with 50% alpha */
+  background-color: rgba(247, 247, 247, 0.7);
+  /* light gray background with 50% alpha */
   margin-top: 20px;
   text-align: center;
+  width: 30vw;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 p.duk {
-  font-size: 1em;
+  font-size: 1rem;
   font-style: italic;
   color: #666;
-  /* dark gray color */
   padding: 10px;
   border-radius: 10px;
   background-color: #f7f7f7;
-  /* light gray background */
-  margin-top: 10px;
+  height: 6em;
+  line-height: 1em;
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(15%, -220%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 800px;
+  min-width: 800px;
 }
 
 
@@ -521,6 +562,6 @@ Header Style
   }
 
   .container-left {
-  margin-left: 40vw;
-}
+    margin-left: 40vw;
+  }
 }
