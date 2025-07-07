@@ -119,7 +119,7 @@ const Quiz = () => {
     setCurrentQuestion(currentQuestion + 1);
     console.log('currentQuestion', currentQuestion.RispostaCorretta && currentQuestion.PredictedCategory);
 
-    if (currentQuestion + 1 === 40) {
+    if (currentQuestion + 1 === 39) {
       const payload = {
         enterprise_id: localStorage.getItem('loginId'),
         score: score,
@@ -190,7 +190,7 @@ const Quiz = () => {
             <div>
               <div style={{ minWidth: '1000px' }}>
 
-                <h2 className="mb-5">{questions[currentQuestion].Domanda}</h2>
+                <h2 className="mb-5">{questions[currentQuestion]?.Domanda}</h2>
                 <ul>
                   {questions[currentQuestion].RispostaA && (
                     <li>
