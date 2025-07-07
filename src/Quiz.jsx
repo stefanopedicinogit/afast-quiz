@@ -139,9 +139,9 @@ const Quiz = () => {
       setThirdPercentage((thirdPercentage / 8) * 100);
       setFourthPercentage((secondPercentage / 8) * 100);
       setFifthPercentage((fifthPercentage / 8) * 100);
-
+      
       try {
-        const response = await fetch('http://localhost:8000/save-result', {
+        const response = await fetch('https://afast-backend.onrender.com/save-result', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
