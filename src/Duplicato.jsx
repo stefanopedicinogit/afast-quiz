@@ -1,7 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-
-const AssessmentComplete = () => {
-    const navigate = useNavigate();
+const Duplicato = () => {
 
     return (
         <div>
@@ -11,7 +8,7 @@ const AssessmentComplete = () => {
                         <div className="col-12">
                             <nav className="main-nav">
                                 <div className='logo'>
-                                    <h1>AFAST</h1>
+                                    <h1 href="/">AFAST</h1>
                                 </div>
                                 <div>
                                     <h1 style={{ color: 'white' }}>LOGIN</h1>
@@ -24,11 +21,11 @@ const AssessmentComplete = () => {
 
             <div className="main-banner" id="top">
                 <div className="container">
-                    <h2 className='supporto'>Grazie per il tuo supporto</h2>
+                    <h2 className='supporto'>Hai già eseguito l'assessment</h2>
                 </div>
             </div>
         </div>
     );
 };
 
-export default AssessmentComplete;
+export default Duplicato;

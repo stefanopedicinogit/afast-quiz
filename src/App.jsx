@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Quiz from './Quiz';
+import Error from './Error';
+import Duplicato from './Duplicato';
 import AssessmentComplete from './AssessmentComplete';
 
 const App = () => {
@@ -9,6 +11,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/quiz" element={<Quiz />} />
+        <Route path="/error" element={<Error />} />
+        <Route path="/duplicato" element={<Duplicato />} />
         <Route path="/assessment-complete" element={<AssessmentComplete />} />
       </Routes>
     </BrowserRouter>

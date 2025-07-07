@@ -10,9 +10,13 @@ const Quiz = () => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [firstPercentage, setFirstPercentage] = useState(null);
+  const [secondPercentage, setSecondPercentage] = useState(null);
+  const [thirdPercentage, setThirdPercentage] = useState(null);
+  const [fourthPercentage, setFourthPercentage] = useState(null);
+  const [fifthPercentage, setFifthPercentage] = useState(null);
   const navigate = useNavigate();
-  const [loginId, setLoginId] = useState(null);
-
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -22,17 +26,47 @@ const Quiz = () => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const data = utils.sheet_to_json(sheet);
-      const shuffledQuestions = shuffleArray(data);
-      setQuestions(shuffledQuestions);
+
+      const classes = [
+        'Customer-Centric Approach',
+        'Deposit Mobilization, Lending',
+        'Cybersecurity Threats, Regulatory Compliance',
+        'Asset Management',
+        'Payment Services',
+      ];
+
+      const filteredQuestions = data.filter((question) => {
+        const className = question.PredictedCategory;
+        return classes.includes(className) || ['Deposit Mobilization', 'Lending'].includes(className) || ['Cybersecurity Threats', 'Regulatory Compliance'].includes(className);
+      });
+
+      const classQuestions = {};
+      classes.forEach((className) => {
+        classQuestions[className] = filteredQuestions.filter((question) => {
+          if (className === 'Deposit Mobilization, Lending') {
+            return ['Deposit Mobilization', 'Lending'].includes(question.PredictedCategory);
+          } else if (className === 'Cybersecurity Threats, Regulatory Compliance') {
+            return ['Cybersecurity Threats', 'Regulatory Compliance'].includes(question.PredictedCategory);
+          } else {
+            return question.PredictedCategory === className;
+          }
+        });
+      });
+
+      const shuffledQuestions = [];
+      Object.keys(classQuestions).forEach((className) => {
+        const classQuestionsArray = classQuestions[className];
+        const shuffledClassQuestions = shuffleArray(classQuestionsArray);
+        shuffledQuestions.push(...shuffledClassQuestions.slice(0, 8)); // take only 8 questions from each class
+      });
+
+
+      const finalShuffledQuestions = shuffleArray(shuffledQuestions);
+
+      setQuestions(finalShuffledQuestions || []);
     };
     loadQuestions();
-  }, []);
-
-  useEffect(() => {
-    const storedLoginId = localStorage.getItem('loginId');
-    if (storedLoginId) {
-      setLoginId(storedLoginId);
-    }
+    setStartTime(new Date().getTime())
   }, []);
 
   const shuffleArray = (array) => {
@@ -48,27 +82,87 @@ const Quiz = () => {
     setShowExplanation(true);
   };
 
-  const handleNextQuestion = () => {
+
+
+  useEffect(() => {
+    console.log('Answer', questions[currentQuestion]?.RispostaCorretta);
+    console.log('PredictedCategory', questions[currentQuestion]?.PredictedCategory);
+
+    if (userAnswer === questions[currentQuestion]?.RispostaCorretta) {
+      if (questions[currentQuestion]?.PredictedCategory === 'Customer-Centric Approach') {
+        setFirstPercentage(firstPercentage + 1);
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Deposit Mobilization' || questions[currentQuestion]?.PredictedCategory === 'Lending') {
+        setSecondPercentage(secondPercentage + 1);
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Cybersecurity Threats' || questions[currentQuestion]?.PredictedCategory === 'Regulatory Compliance') {
+        setThirdPercentage(thirdPercentage + 1);
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Asset Management') {
+        setFourthPercentage(fourthPercentage + 1);
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Payment Services') {
+        setFifthPercentage(fifthPercentage + 1); // setFifthPercentage(prevPercentage) => prevPercentage + 1);
+      }
+    }
+  }, [userAnswer]);
+
+
+  useEffect(() => {
+    console.log('firstPercentage', firstPercentage);
+    console.log('secondPercentage', secondPercentage);
+    console.log('thirdPercentage', thirdPercentage);
+    console.log('fourthPercentage', fourthPercentage);
+    console.log('fifthPercentage', fifthPercentage);
+  }, [firstPercentage, secondPercentage, thirdPercentage, fourthPercentage, fifthPercentage, score]);
+
+
+  const handleNextQuestion = async () => {
     setShowExplanation(false);
     setUserAnswer(null);
     setCurrentQuestion(currentQuestion + 1);
-    if (currentQuestion + 1 === 10) {
-      const saveData = async () => {
-        if (loginId && score) {
-          const csvContent = `${loginId},${score}\n`;
-          const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-          const csvFile = new File([csvBlob], 'quiz_results.csv');
-          // Save the file to the user's device
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(csvFile);
-          link.download = 'quiz_results.csv';
-          link.click();
-        }
+    console.log('currentQuestion', currentQuestion.RispostaCorretta && currentQuestion.PredictedCategory);
+
+    if (currentQuestion + 1 === 40) {
+      const payload = {
+        enterprise_id: localStorage.getItem('loginId'),
+        score: score,
+        start_time: startTime,
+        end_time: new Date().getTime(),
+        duration_in_sec: (new Date().getTime() - startTime) / 1000,
+        first_percentage: ((firstPercentage / 8) * 100),
+        second_percentage: ((secondPercentage / 8) * 100),
+        third_percentage: ((thirdPercentage / 8) * 100),
+        fourth_percentage: ((fourthPercentage / 8) * 100),
+        fifth_percentage: ((fifthPercentage / 8) * 100),
+
       };
-      saveData();
-      navigate('/assessment-complete');
+
+      setFirstPercentage((firstPercentage / 8) * 100);
+      setSecondPercentage((fourthPercentage / 8) * 100);
+      setThirdPercentage((thirdPercentage / 8) * 100);
+      setFourthPercentage((secondPercentage / 8) * 100);
+      setFifthPercentage((fifthPercentage / 8) * 100);
+
+      try {
+        const response = await fetch('http://localhost:8000/save-result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+          navigate('/assessment-complete');
+        } else {
+          navigate('/error');
+          console.error('Error saving results:', response.status);
+        }
+      } catch (error) {
+        navigate('/error');
+        console.error('Error saving results:', error);
+      }
     }
   };
+
+
 
   return (
     <>
@@ -77,19 +171,19 @@ const Quiz = () => {
           <div className="row">
             <div className="col-12">
               <nav className="main-nav">
-                <p className='logo'>
+                <div className='logo'>
                   <h1>AFAST</h1>
-                </p>
-                <p>
+                </div>
+                <div>
                   <h1 style={{ color: 'white' }}>ASSESSMENT FUNCTIONAL GAP</h1>
-                </p>
+                </div>
               </nav>
             </div>
           </div>
         </div>
       </header>
 
-      <div class="main-banner" id="top">
+      <div className="main-banner" id="top">
         <div className="container">
 
           {questions.length > 0 && (
@@ -144,7 +238,7 @@ const Quiz = () => {
                   )}
                 </ul>
               </div>
-              <p className='score mt-5'> <b>Score:  {score}</b></p>
+              <p className='score mt-5'> <b>Score:  {score} / 40</b></p>
 
             </div>
           )}
