@@ -141,7 +141,7 @@ const Quiz = () => {
       setFifthPercentage((fifthPercentage / 8) * 100);
       
       try {
-        const response = await fetch('https://afast-backend.onrender.com/save-result', {
+        const response = await fetch('https://afast-backend.vercel.app/save-result', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
