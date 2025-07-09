@@ -119,6 +119,26 @@ const Quiz = () => {
     setCurrentQuestion(currentQuestion + 1);
     console.log('currentQuestion', currentQuestion.RispostaCorretta && currentQuestion.PredictedCategory);
 
+    const payload_answer = {
+      enterprise_id : localStorage.getItem('loginId'),
+      domanda : questions[currentQuestion]?.Domanda,
+      risposta : userAnswer,
+      categoria_predizione : questions[currentQuestion]?.PredictedCategory,
+      ok_ko : questions[currentQuestion]?.RispostaCorretta === userAnswer ? 'OK' : 'KO',
+    }
+    try {
+        const response = await fetch('https://afast-backend.vercel.app/save-answers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload_answer),
+        });
+      } catch (error) {
+        navigate('/error');
+        console.error('Error saving results:', error);
+      }
+
     if (currentQuestion + 1 === 39) {
       const payload = {
         enterprise_id: localStorage.getItem('loginId'),
