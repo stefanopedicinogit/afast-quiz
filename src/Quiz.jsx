@@ -11,6 +11,7 @@ const Quiz = () => {
   const [score, setScore] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
   const [startTime, setStartTime] = useState(null);
+  const [time, setTime] = useState(null);
   const [firstPercentage, setFirstPercentage] = useState(null);
   const [secondPercentage, setSecondPercentage] = useState(null);
   const [thirdPercentage, setThirdPercentage] = useState(null);
@@ -23,50 +24,44 @@ const Quiz = () => {
       const response = await fetch('/AFAST.xlsx');
       const arrayBuffer = await response.arrayBuffer();
       const workbook = read(arrayBuffer, { type: 'array' });
-      const sheetName = workbook.SheetNames[0];
+      const sheetName = 'Predicted Categoria Finale';
       const sheet = workbook.Sheets[sheetName];
       const data = utils.sheet_to_json(sheet);
 
       const classes = [
-        'Customer-Centric Approach',
-        'Deposit Mobilization, Lending',
-        'Cybersecurity Threats, Regulatory Compliance',
-        'Asset Management',
-        'Payment Services',
+        'Credito',
+        'Canali',
+        'Finanza',
+        'Pagamenti',
+        'Risk & Document management',
       ];
 
       const filteredQuestions = data.filter((question) => {
         const className = question.PredictedCategory;
-        return classes.includes(className) || ['Deposit Mobilization', 'Lending'].includes(className) || ['Cybersecurity Threats', 'Regulatory Compliance'].includes(className);
+        return classes.includes(className);
       });
 
       const classQuestions = {};
       classes.forEach((className) => {
         classQuestions[className] = filteredQuestions.filter((question) => {
-          if (className === 'Deposit Mobilization, Lending') {
-            return ['Deposit Mobilization', 'Lending'].includes(question.PredictedCategory);
-          } else if (className === 'Cybersecurity Threats, Regulatory Compliance') {
-            return ['Cybersecurity Threats', 'Regulatory Compliance'].includes(question.PredictedCategory);
-          } else {
-            return question.PredictedCategory === className;
-          }
-        });
+          return question.PredictedCategory === className;
+        }
+        );
       });
 
       const shuffledQuestions = [];
       Object.keys(classQuestions).forEach((className) => {
         const classQuestionsArray = classQuestions[className];
         const shuffledClassQuestions = shuffleArray(classQuestionsArray);
-        shuffledQuestions.push(...shuffledClassQuestions.slice(0, 8)); // take only 8 questions from each class
+        shuffledQuestions.push(...shuffledClassQuestions.slice(0, 8)); 
       });
-
-
       const finalShuffledQuestions = shuffleArray(shuffledQuestions);
-
       setQuestions(finalShuffledQuestions || []);
     };
+
     loadQuestions();
-    setStartTime(new Date().getTime())
+    setStartTime(new Date().toISOString().replace('T', ' ').replace('Z', ''))
+    setTime(new Date().getTime());
   }, []);
 
   const shuffleArray = (array) => {
@@ -89,16 +84,16 @@ const Quiz = () => {
     console.log('PredictedCategory', questions[currentQuestion]?.PredictedCategory);
 
     if (userAnswer === questions[currentQuestion]?.RispostaCorretta) {
-      if (questions[currentQuestion]?.PredictedCategory === 'Customer-Centric Approach') {
+      if (questions[currentQuestion]?.PredictedCategory === 'Credito') {
         setFirstPercentage(firstPercentage + 1);
-      } else if (questions[currentQuestion]?.PredictedCategory === 'Deposit Mobilization' || questions[currentQuestion]?.PredictedCategory === 'Lending') {
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Canali') {
         setSecondPercentage(secondPercentage + 1);
-      } else if (questions[currentQuestion]?.PredictedCategory === 'Cybersecurity Threats' || questions[currentQuestion]?.PredictedCategory === 'Regulatory Compliance') {
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Finanza') {
         setThirdPercentage(thirdPercentage + 1);
-      } else if (questions[currentQuestion]?.PredictedCategory === 'Asset Management') {
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Pagamenti') {
         setFourthPercentage(fourthPercentage + 1);
-      } else if (questions[currentQuestion]?.PredictedCategory === 'Payment Services') {
-        setFifthPercentage(fifthPercentage + 1); // setFifthPercentage(prevPercentage) => prevPercentage + 1);
+      } else if (questions[currentQuestion]?.PredictedCategory === 'Risk & Document management') {
+        setFifthPercentage(fifthPercentage + 1);
       }
     }
   }, [userAnswer]);
@@ -120,32 +115,33 @@ const Quiz = () => {
     console.log('currentQuestion', currentQuestion.RispostaCorretta && currentQuestion.PredictedCategory);
 
     const payload_answer = {
-      enterprise_id : localStorage.getItem('loginId'),
-      domanda : questions[currentQuestion]?.Domanda,
-      risposta : userAnswer,
-      categoria_predizione : questions[currentQuestion]?.PredictedCategory,
-      ok_ko : questions[currentQuestion]?.RispostaCorretta === userAnswer ? 'OK' : 'KO',
+      enterprise_id: localStorage.getItem('loginId'),
+      domanda: questions[currentQuestion]?.Domanda,
+      risposta: userAnswer,
+      categoria_predizione: questions[currentQuestion]?.PredictedCategory,
+      ok_ko: questions[currentQuestion]?.RispostaCorretta === userAnswer ? 'OK' : 'KO',
     }
     try {
-        const response = await fetch('https://afast-backend.vercel.app/save-answers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload_answer),
-        });
-      } catch (error) {
-        navigate('/error');
-        console.error('Error saving results:', error);
-      }
+      const response = await fetch('https://afast-backend.vercel.app/save-answers', {
+      // const response = await fetch('http://localhost:8000/save-answers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload_answer),
+      });
+    } catch (error) {
+      navigate('/error');
+      console.error('Error saving results:', error);
+    }
 
     if (currentQuestion + 1 === 39) {
       const payload = {
         enterprise_id: localStorage.getItem('loginId'),
         score: score,
         start_time: startTime,
-        end_time: new Date().getTime(),
-        duration_in_sec: (new Date().getTime() - startTime) / 1000,
+        end_time: new Date().toISOString().replace('T', ' ').replace('Z', ''),
+        duration_in_sec: (new Date().getTime() - time) / 1000,
         first_percentage: ((firstPercentage / 8) * 100),
         second_percentage: ((secondPercentage / 8) * 100),
         third_percentage: ((thirdPercentage / 8) * 100),
@@ -159,9 +155,11 @@ const Quiz = () => {
       setThirdPercentage((thirdPercentage / 8) * 100);
       setFourthPercentage((secondPercentage / 8) * 100);
       setFifthPercentage((fifthPercentage / 8) * 100);
-      
+
       try {
         const response = await fetch('https://afast-backend.vercel.app/save-result', {
+        // const response = await fetch('http://localhost:8000/save-result', {
+
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
