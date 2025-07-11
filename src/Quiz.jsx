@@ -135,7 +135,7 @@ const Quiz = () => {
       console.error('Error saving results:', error);
     }
 
-    if (currentQuestion + 1 < 40) {
+    if (currentQuestion + 1 === 40) {
       const payload = {
         enterprise_id: localStorage.getItem('loginId'),
         score: score,
@@ -147,7 +147,6 @@ const Quiz = () => {
         third_percentage: ((thirdPercentage / 8) * 100),
         fourth_percentage: ((fourthPercentage / 8) * 100),
         fifth_percentage: ((fifthPercentage / 8) * 100),
-
       };
 
       setFirstPercentage((firstPercentage / 8) * 100);
