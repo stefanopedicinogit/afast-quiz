@@ -111,8 +111,6 @@ const Quiz = () => {
   const handleNextQuestion = async () => {
     setShowExplanation(false);
     setUserAnswer(null);
-    setCurrentQuestion(currentQuestion + 1);
-    console.log('currentQuestion', currentQuestion.RispostaCorretta && currentQuestion.PredictedCategory);
 
     const payload_answer = {
       enterprise_id: localStorage.getItem('loginId'),
@@ -177,6 +175,7 @@ const Quiz = () => {
         console.error('Error saving results:', error);
       }
     }
+    setCurrentQuestion(currentQuestion + 1);
   };
 
 
