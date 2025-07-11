@@ -80,9 +80,6 @@ const Quiz = () => {
 
 
   useEffect(() => {
-    console.log('Answer', questions[currentQuestion]?.RispostaCorretta);
-    console.log('PredictedCategory', questions[currentQuestion]?.PredictedCategory);
-
     if (userAnswer === questions[currentQuestion]?.RispostaCorretta) {
       if (questions[currentQuestion]?.PredictedCategory === 'Credito') {
         setFirstPercentage(firstPercentage + 1);
@@ -97,16 +94,6 @@ const Quiz = () => {
       }
     }
   }, [userAnswer]);
-
-
-  useEffect(() => {
-    console.log('firstPercentage', firstPercentage);
-    console.log('secondPercentage', secondPercentage);
-    console.log('thirdPercentage', thirdPercentage);
-    console.log('fourthPercentage', fourthPercentage);
-    console.log('fifthPercentage', fifthPercentage);
-  }, [firstPercentage, secondPercentage, thirdPercentage, fourthPercentage, fifthPercentage, score]);
-
 
   const handleNextQuestion = async () => {
     setShowExplanation(false);
