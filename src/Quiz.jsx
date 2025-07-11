@@ -135,7 +135,7 @@ const Quiz = () => {
       console.error('Error saving results:', error);
     }
 
-    if (currentQuestion + 1 === 39) {
+    if (currentQuestion + 1 < 40) {
       const payload = {
         enterprise_id: localStorage.getItem('loginId'),
         score: score,

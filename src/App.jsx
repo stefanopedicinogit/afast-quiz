@@ -5,6 +5,7 @@ import Error from './Error';
 import Duplicato from './Duplicato';
 import AssessmentComplete from './AssessmentComplete';
 import Riepilogo from './Riepilogo';
+import TEST from './test';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/duplicato" element={<Duplicato />} />
         <Route path="/assessment-complete" element={<AssessmentComplete />} />
         <Route path="/riepilogo" element={<Riepilogo />} />
+        <Route path="/test" element={<TEST />} />
       </Routes>
     </BrowserRouter>
   );
