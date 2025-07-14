@@ -28,6 +28,8 @@ const Quiz = () => {
       const sheet = workbook.Sheets[sheetName];
       const data = utils.sheet_to_json(sheet);
 
+      console.log(data);
+
       const classes = [
         'Credito',
         'Canali',
@@ -41,6 +43,7 @@ const Quiz = () => {
         return classes.includes(className);
       });
 
+      console.log(filteredQuestions);
       const classQuestions = {};
       classes.forEach((className) => {
         classQuestions[className] = filteredQuestions.filter((question) => {
