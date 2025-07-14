@@ -5,11 +5,11 @@ import DUKModal from './DUKModal';
 import { useNavigate } from 'react-router-dom';
 
 const Quiz = () => {
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(1);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [score, setScore] = useState(1);
+  const [score, setScore] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [time, setTime] = useState(null);
