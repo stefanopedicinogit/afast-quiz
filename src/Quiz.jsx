@@ -5,10 +5,11 @@ import DUKModal from './DUKModal';
 import { useNavigate } from 'react-router-dom';
 
 const Quiz = () => {
+  const [counter, setCounter] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(1);
   const [userAnswer, setUserAnswer] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [time, setTime] = useState(null);
@@ -162,7 +163,11 @@ const Quiz = () => {
         console.error('Error saving results:', error);
       }
     }
-    setCurrentQuestion(currentQuestion + 1);
+
+    if(counter <= 40) {
+      setCurrentQuestion(currentQuestion + 1);
+      setCounter(counter +1 )
+    }
   };
 
 
@@ -189,7 +194,7 @@ const Quiz = () => {
       <div className="main-banner" id="top">
         <div className="container">
 
-          {questions.length > 0 && (
+          {questions.length > 0 && counter <= 40 && (
             <div>
               <div style={{ minWidth: '1000px' }}>
 
@@ -241,8 +246,7 @@ const Quiz = () => {
                   )}
                 </ul>
               </div>
-              <p className='score mt-5'> <b>Score:  {score} / 40</b></p>
-
+              <p className='score mt-5'> <b>Score:  {score} / {counter}</b></p>
             </div>
           )}
 
