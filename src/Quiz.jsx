@@ -46,17 +46,18 @@ const Quiz = () => {
       classes.forEach((className) => {
         classQuestions[className] = filteredQuestions.filter((question) => {
           return question.PredictedCategory === className;
-        }
-        );
+        });
       });
 
-      const shuffledQuestions = [];
+      const shuffledQuestions = new Set(); // Create a new Set to store unique questions
       Object.keys(classQuestions).forEach((className) => {
         const classQuestionsArray = classQuestions[className];
         const shuffledClassQuestions = shuffleArray(classQuestionsArray);
-        shuffledQuestions.push(...shuffledClassQuestions.slice(0, 8)); 
+        shuffledClassQuestions.slice(0, 8).forEach((question) => {
+          shuffledQuestions.add(question); // Add each question to the Set
+        });
       });
-      const finalShuffledQuestions = shuffleArray(shuffledQuestions);
+      const finalShuffledQuestions = Array.from(shuffledQuestions); // Convert the Set to an array
       setQuestions(finalShuffledQuestions || []);
     };
 
@@ -109,7 +110,7 @@ const Quiz = () => {
     }
     try {
       const response = await fetch('https://afast-backend.vercel.app/save-answers', {
-      // const response = await fetch('http://localhost:8000/save-answers', {
+        // const response = await fetch('http://localhost:8000/save-answers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +144,7 @@ const Quiz = () => {
 
       try {
         const response = await fetch('https://afast-backend.vercel.app/save-result', {
-        // const response = await fetch('http://localhost:8000/save-result', {
+          // const response = await fetch('http://localhost:8000/save-result', {
 
           method: 'POST',
           headers: {
@@ -164,9 +165,9 @@ const Quiz = () => {
       }
     }
 
-    if(counter <= 40) {
+    if (counter <= 40) {
       setCurrentQuestion(currentQuestion + 1);
-      setCounter(counter +1 )
+      setCounter(counter + 1)
     }
   };
 
